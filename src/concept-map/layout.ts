@@ -3,7 +3,7 @@ import type { GraphIndex, VisibleGraph } from './graph';
 import type { ConceptNodeData } from './types';
 
 export const NODE_W = 150;
-export const NODE_H = 156;
+export const NODE_H = 120;
 
 const TWO_PI = Math.PI * 2;
 /** distanza minima tra due anelli concentrici */

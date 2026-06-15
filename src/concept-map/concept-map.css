@@ -25,7 +25,7 @@
 .cm-node {
   position: relative;
   width: 150px;
-  height: 156px;
+  height: auto;
 }
 
 .cm-node__card {

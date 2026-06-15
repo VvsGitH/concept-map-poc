@@ -61,7 +61,6 @@ function ConceptNodeInner({ data }: NodeProps<ConceptFlowNode>) {
           )}
         </span>
         <span className="cm-node__title">{node.title}</span>
-        <span className="cm-node__type">{style.label}</span>
       </button>
 
       {canExpand && (
