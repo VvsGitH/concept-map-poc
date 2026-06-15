@@ -8,7 +8,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from '@xyflow/react';
-import type { Edge } from '@xyflow/react';
+import type { Edge, ReactFlowProps } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import type { ConceptMapData, ConceptNodeData } from './types';
@@ -148,6 +148,10 @@ function Viewer({ map }: ConceptMapViewerProps) {
     ? (index.byId.get(selectedId) ?? null)
     : null;
 
+  const handleNodeClick: ReactFlowProps['onNodeClick'] = (_, node) => {
+    console.log(node);
+  };
+
   return (
     <div className="cm-root" role="application" aria-label="Mappa concettuale interattiva">
       <ReactFlow
@@ -163,6 +167,7 @@ function Viewer({ map }: ConceptMapViewerProps) {
         elementsSelectable={false}
         zoomOnDoubleClick={false}
         proOptions={{ hideAttribution: false }}
+        onNodeClick={handleNodeClick}
       >
         <Background variant={BackgroundVariant.Dots} gap={26} size={1.4} color="#DDD8CC" />
         <Controls showInteractive={false} position="bottom-right" />
