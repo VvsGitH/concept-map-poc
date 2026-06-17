@@ -21,10 +21,10 @@ export interface ConceptNodeData {
   /** `null` solo per il nodo radice. */
   parentId: string | null;
   childrenIds: string[];
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Markdown supportato. */
   description?: string;
-  sources?: SourceLink[];
+  sources?: SourceLink[] | null;
 }
 
 export interface ConceptEdgeData {

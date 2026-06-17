@@ -31,7 +31,10 @@ const CROSS_COLOR = '#A8332E';
 function Viewer({ map }: ConceptMapViewerProps) {
   const { fitView } = useReactFlow();
 
-  const index = useMemo(() => buildGraphIndex(map), [map]);
+  const index = useMemo(() => {
+    console.log(map);
+    return buildGraphIndex(map);
+  }, [map]);
 
   // Catena accordion dei nodi espansi (radice esclusa, sempre espansa).
   const [expandedChain, setExpandedChain] = useState<string[]>([]);
