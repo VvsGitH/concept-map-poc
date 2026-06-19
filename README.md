@@ -44,7 +44,7 @@ interface ConceptMapData {
   nodes: {
     id: string;
     title: string;
-    type: 'person' | 'event' | 'organization' | 'other';
+    type: 'person' | 'event' | 'organization' | 'location' | 'topic';
     parentId: string | null;     // null solo per la radice
     childrenIds: string[];
     imageUrl?: string;           // fallback automatico se mancante/rotta

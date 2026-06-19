@@ -49,7 +49,7 @@ Key concepts that span multiple files:
 
 - **Nodes are non-interactive at the React Flow level** (`draggable/selectable/focusable: false`). Real interactivity lives in `ConceptNode.tsx` as actual `<button>` elements: the +/− toggle (`onToggle`) and the card body (`onOpen` → `NodeModal`). This keeps tab-order in BFS order (the order `computeVisible` returns nodes) and accessibility correct. `NodeModal` uses a native `<dialog>` for built-in focus trapping.
 
-- **Node types** (`person | event | organization | other`) drive colors via `palette.ts` (`TYPE_STYLES`), used by both nodes and the legend.
+- **Node types** (`person | event | organization | location | topic`) drive colors via `palette.ts` (`TYPE_STYLES`), used by both nodes and the legend.
 
 ## Demo data
 

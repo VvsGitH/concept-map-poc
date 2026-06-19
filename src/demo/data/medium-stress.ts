@@ -45,7 +45,7 @@ export const mediumMap = buildMap(
   {
     id: 'dossier',
     title: 'Dossier Appalti Sanità',
-    type: 'other',
+    type: 'topic',
     imageUrl: photo('sanita'),
     description:
       'Mappa dell\'inchiesta sugli appalti per le forniture sanitarie regionali (2024–2026): **38 attori** tra persone, società ed eventi chiave.',
@@ -72,7 +72,7 @@ export const mediumMap = buildMap(
         ]),
         org('subfor2', 'CleanMed Service', 'subfornitrice'),
         ev('ev-fatture', 'Le fatture gonfiate', 'accusata per', [
-          { id: 'doc-perizia', title: 'Perizia contabile', type: 'other', relation: 'documentata da', description: 'Perizia disposta dal GIP: sovrapprezzi medi del **34%**.' },
+          { id: 'doc-perizia', title: 'Perizia contabile', type: 'topic', relation: 'documentata da', description: 'Perizia disposta dal GIP: sovrapprezzi medi del **34%**.' },
         ]),
       ]),
       ev('ev-bando23', 'Bando forniture 2023', 'atto chiave', [
@@ -87,11 +87,11 @@ export const mediumMap = buildMap(
       org('procura2', 'Procura regionale', 'indaga', [
         person('p-pm', 'Davide Coletti', 60, 'pubblico ministero'),
         ev('ev-perquisizioni', 'Perquisizioni di gennaio', 'ha disposto', [
-          { id: 'doc-sequestro', title: 'Verbale di sequestro', type: 'other', relation: 'prodotto', description: 'Sequestrati server e documentazione contabile.' },
+          { id: 'doc-sequestro', title: 'Verbale di sequestro', type: 'topic', relation: 'prodotto', description: 'Sequestrati server e documentazione contabile.' },
         ]),
       ]),
       person('p-whistle', 'La fonte interna', 7, 'ha innescato l\'inchiesta', [
-        { id: 'doc-email', title: 'Le email interne', type: 'other', relation: 'ha fornito', description: 'Catena di email tra ufficio gare e MedSupply.' },
+        { id: 'doc-email', title: 'Le email interne', type: 'topic', relation: 'ha fornito', description: 'Catena di email tra ufficio gare e MedSupply.' },
       ]),
       ev('ev-consiglio', 'Question time in Consiglio', 'eco politica', [
         person('p-opposizione', 'Sara Maggi', 20, 'consigliera di opposizione'),
@@ -111,12 +111,13 @@ export const mediumMap = buildMap(
 /* Dataset stress: 100 nodi, profondità 5, generato                   */
 /* ------------------------------------------------------------------ */
 
-const TYPES: ConceptNodeType[] = ['person', 'event', 'organization', 'other'];
+const TYPES: ConceptNodeType[] = ['person', 'event', 'organization', 'topic'];
 const TYPE_TITLES: Record<ConceptNodeType, string[]> = {
   person: ['Testimone', 'Funzionario', 'Imprenditore', 'Consulente', 'Dirigente'],
   event: ['Riunione', 'Bonifico', 'Delibera', 'Ispezione', 'Udienza'],
   organization: ['Società', 'Fondazione', 'Consorzio', 'Ente', 'Studio legale'],
-  other: ['Documento', 'Intercettazione', 'Perizia', 'Verbale', 'Esposto'],
+  location: [],
+  topic: ['Documento', 'Intercettazione', 'Perizia', 'Verbale', 'Esposto'],
 };
 const RELATIONS = ['collegato a', 'coinvolto in', 'controlla', 'partecipa a', 'cita', 'finanzia'];
 

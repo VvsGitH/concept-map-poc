@@ -2,14 +2,16 @@ import { useMemo, useState } from 'react';
 import { ConceptMapViewer } from '../concept-map';
 import { smallMap } from './data/small';
 import { mediumMap, stressMap } from './data/medium-stress';
-import { testDs1 } from './data/test';
+import { testDs1, usaIran, storiaFinaliChampions } from './data/test';
 import './app.css';
 
 const MAPS = {
   small: { label: 'Il caso Porto Vecchio · 11 nodi', data: smallMap },
   medium: { label: 'Dossier Appalti Sanità · 31 nodi', data: mediumMap },
   stress: { label: 'Operazione Cento Fili · 100 nodi', data: stressMap },
-  ds: { label: 'Test DS 1', data: testDs1 },
+  testDs1: { label: 'Test DS 1', data: testDs1 },
+  usaIran: { label: 'USA - Iran', data: usaIran },
+  storiaFinaliChampions: { label: 'Storia Finali Champions', data: storiaFinaliChampions },
 } as const;
 
 type MapKey = keyof typeof MAPS;

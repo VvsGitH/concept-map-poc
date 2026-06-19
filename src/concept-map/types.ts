@@ -7,7 +7,7 @@
  *   mostrata sul ramo dell'albero); qualunque altro arco è un cross-link.
  */
 
-export type ConceptNodeType = 'person' | 'event' | 'organization' | 'other';
+export type ConceptNodeType = 'person' | 'event' | 'organization' | 'location' | 'topic';
 
 export interface SourceLink {
   title: string;

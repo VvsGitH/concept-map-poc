@@ -55,7 +55,7 @@ function ConceptNodeInner({ data }: NodeProps<ConceptFlowNode>) {
       >
         <span className="cm-node__avatar" aria-hidden="true">
           {showImage ? (
-            <img src={node.imageUrl} alt="" onError={() => setImgFailed(true)} loading="lazy" />
+            <img src={node.imageUrl || ''} alt="" onError={() => setImgFailed(true)} loading="lazy" />
           ) : (
             <span className="cm-node__initial">{node.title.charAt(0).toUpperCase()}</span>
           )}

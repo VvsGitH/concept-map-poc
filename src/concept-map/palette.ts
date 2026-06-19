@@ -16,5 +16,6 @@ export const TYPE_STYLES: Record<ConceptNodeType, TypeStyle> = {
   person: { label: 'Persona', color: '#1D4ED8', tint: '#E4ECFC' },
   event: { label: 'Evento', color: '#B45309', tint: '#FBEEDC' },
   organization: { label: 'Organizzazione', color: '#047857', tint: '#DDF2EA' },
-  other: { label: 'Altro', color: '#5B5F6E', tint: '#E9EAEF' },
+  location: { label: 'Luogo', color: '#047857', tint: '#DDF2EA' },
+  topic: { label: 'Topic', color: '#5B5F6E', tint: '#E9EAEF' },
 };

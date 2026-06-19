@@ -111,7 +111,7 @@ export const smallMap = buildMap(
       {
         id: 'esposto',
         title: 'L\'esposto anonimo',
-        type: 'other',
+        type: 'topic',
         relation: 'origine dell\'inchiesta',
         description: 'Il documento di 12 pagine recapitato in redazione nel novembre 2025.',
       },
