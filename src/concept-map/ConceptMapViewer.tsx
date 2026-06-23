@@ -18,6 +18,7 @@ import { ConceptNode } from './ConceptNode';
 import type { ConceptFlowNode } from './ConceptNode';
 import { NodeModal } from './NodeModal';
 import { TYPE_STYLES } from './palette';
+import { LabelEdge } from './LabelEdge';
 import './concept-map.css';
 
 export interface ConceptMapViewerProps {
@@ -31,6 +32,7 @@ export interface ConceptMapViewerProps {
 }
 
 const nodeTypes = { concept: ConceptNode };
+const edgeTypes = { 'label-edge': LabelEdge };
 
 const CROSS_COLOR = '#A8332E';
 
@@ -113,19 +115,14 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
     const edges: Edge[] = [];
     for (const n of visible.nodes) {
       if (n.parentId === null || !visible.visibleIds.has(n.parentId)) continue;
-      const label = index.treeEdgeLabels.get(n.id);
       edges.push({
         id: `t-${n.id}`,
         source: n.parentId,
         target: n.id,
-        type: 'straight',
-        label,
+        type: 'label-edge',
+        label: index.treeEdgeLabels.get(n.id),
         focusable: false,
-        style: { stroke: '#C9C4B8', strokeWidth: 1.5 },
-        labelStyle: { fill: '#6B6657', fontSize: 11, fontFamily: 'Inter, sans-serif' },
-        labelBgStyle: { fill: '#FCFBF8', fillOpacity: 0.92 },
-        labelBgPadding: [6, 3],
-        labelBgBorderRadius: 6,
+        style: { color: '#6B6657', stroke: '#C9C4B8', strokeWidth: 1.5 },
       });
     }
     for (const e of visible.visibleCrossLinks) {
@@ -133,14 +130,10 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
         id: `x-${e.id}`,
         source: e.source,
         target: e.target,
-        type: 'straight',
+        type: 'label-edge',
         label: e.label,
         focusable: false,
-        style: { stroke: CROSS_COLOR, strokeWidth: 1.5, strokeDasharray: '6 5', opacity: 0.8 },
-        labelStyle: { fill: CROSS_COLOR, fontSize: 11, fontFamily: 'Inter, sans-serif', fontWeight: 500 },
-        labelBgStyle: { fill: '#FCFBF8', fillOpacity: 0.92 },
-        labelBgPadding: [6, 3],
-        labelBgBorderRadius: 6,
+        style: { color: CROSS_COLOR, stroke: CROSS_COLOR, strokeWidth: 1.5, strokeDasharray: '6 5', opacity: 0.8 },
       });
     }
     return edges;
@@ -180,6 +173,7 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
         nodes={rfNodes}
         edges={rfEdges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.15 }}
         minZoom={0.1}
