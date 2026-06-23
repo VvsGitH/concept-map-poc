@@ -89,24 +89,20 @@ export interface VisibleGraph {
   visibleCrossLinks: ConceptEdgeData[];
 }
 
-export function computeVisible(index: GraphIndex, expandedChain: string[]): VisibleGraph {
-  const expandedIds = new Set(expandedChain);
+export function computeVisible(index: GraphIndex, expandedIds: Set<string>): VisibleGraph {
   const visibleIds = new Set<string>([index.root.id]);
   const nodes: ConceptNodeData[] = [index.root];
-
-  const addChildren = (parent: ConceptNodeData) => {
+  const queue: ConceptNodeData[] = [index.root];
+  while (queue.length) {
+    const parent = queue.shift()!;
+    if (parent.id !== index.root.id && !expandedIds.has(parent.id)) continue;
     for (const childId of parent.childrenIds) {
       const child = index.byId.get(childId);
       if (!child || visibleIds.has(childId)) continue;
       visibleIds.add(childId);
       nodes.push(child);
+      queue.push(child);
     }
-  };
-
-  addChildren(index.root);
-  for (const id of expandedChain) {
-    const node = index.byId.get(id);
-    if (node) addChildren(node);
   }
 
   const visibleCrossLinks = index.crossLinks.filter(
@@ -114,4 +110,20 @@ export function computeVisible(index: GraphIndex, expandedChain: string[]): Visi
   );
 
   return { nodes, visibleIds, expandedIds, visibleCrossLinks };
+}
+
+/** Tutti i discendenti di `id` (escluso `id`), lungo childrenIds. */
+export function collectDescendants(index: GraphIndex, id: string): string[] {
+  const result: string[] = [];
+  const queue = [id];
+  while (queue.length) {
+    const cur = queue.shift()!;
+    const node = index.byId.get(cur);
+    if (!node) continue;
+    for (const childId of node.childrenIds) {
+      result.push(childId);
+      queue.push(childId);
+    }
+  }
+  return result;
 }

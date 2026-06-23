@@ -19,6 +19,7 @@ type MapKey = keyof typeof MAPS;
 export default function App() {
   const [mapKey, setMapKey] = useState<MapKey>('small');
   const map = useMemo(() => MAPS[mapKey].data, [mapKey]);
+  const [autoCollapse, setAutoCollapse] = useState(true);
 
   return (
     <div className="demo">
@@ -37,9 +38,17 @@ export default function App() {
             ))}
           </select>
         </label>
+        <label className="demo__toggle">
+          <input
+            type="checkbox"
+            checked={autoCollapse}
+            onChange={(e) => setAutoCollapse(e.target.checked)}
+          />
+          Chiudi rami fratelli
+        </label>
       </header>
       <main className="demo__canvas">
-        <ConceptMapViewer map={map} />
+        <ConceptMapViewer map={map} autoCollapseSiblings={autoCollapse} />
       </main>
     </div>
   );

@@ -73,6 +73,22 @@ body {
   outline-offset: 1px;
 }
 
+.demo__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b6657;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.demo__toggle input[type="checkbox"]:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
 .demo__canvas {
   flex: 1;
   min-height: 0;

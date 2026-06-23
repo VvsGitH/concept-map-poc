@@ -12,7 +12,7 @@ import type { Edge, ReactFlowProps } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import type { ConceptMapData, ConceptNodeData } from './types';
-import { buildGraphIndex, chainTo, computeVisible } from './graph';
+import { buildGraphIndex, chainTo, collectDescendants, computeVisible } from './graph';
 import { NODE_H, NODE_W, radialLayout } from './layout';
 import { ConceptNode } from './ConceptNode';
 import type { ConceptFlowNode } from './ConceptNode';
@@ -22,13 +22,19 @@ import './concept-map.css';
 
 export interface ConceptMapViewerProps {
   map: ConceptMapData;
+  /**
+   * Se true (default) apre un solo ramo per livello (accordion):
+   * aprire un nodo collassa gli altri rami.
+   * Se false, più rami restano aperti contemporaneamente (multi-expand).
+   */
+  autoCollapseSiblings?: boolean;
 }
 
 const nodeTypes = { concept: ConceptNode };
 
 const CROSS_COLOR = '#A8332E';
 
-function Viewer({ map }: ConceptMapViewerProps) {
+function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
   const { fitView } = useReactFlow();
 
   const index = useMemo(() => {
@@ -36,27 +42,43 @@ function Viewer({ map }: ConceptMapViewerProps) {
     return buildGraphIndex(map);
   }, [map]);
 
-  // Catena accordion dei nodi espansi (radice esclusa, sempre espansa).
-  const [expandedChain, setExpandedChain] = useState<string[]>([]);
+  // Insieme dei nodi espansi (radice esclusa, sempre espansa).
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const lastAction = useRef<{ id: string; type: 'expand' | 'collapse' } | null>(null);
 
   // Reset dello stato quando cambia la mappa.
   useEffect(() => {
-    setExpandedChain([]);
+    setExpandedIds(new Set());
     setSelectedId(null);
+    lastAction.current = null;
   }, [index]);
 
-  const visible = useMemo(() => computeVisible(index, expandedChain), [index, expandedChain]);
+  const visible = useMemo(() => computeVisible(index, expandedIds), [index, expandedIds]);
   const positions = useMemo(() => radialLayout(index, visible), [index, visible]);
 
   const onToggle = useCallback(
     (id: string) => {
-      setExpandedChain((chain) => {
-        if (chain.includes(id)) return chain.slice(0, chain.indexOf(id)); // collassa
-        return chainTo(index, id); // espande, collassando i rami fratelli
+      // Leggiamo lo stato corrente fuori dall'updater per non introdurre
+      // effetti collaterali dentro una funzione pura (React StrictMode chiama
+      // l'updater due volte in sviluppo per rilevare impurità).
+      lastAction.current = { id, type: expandedIds.has(id) ? 'collapse' : 'expand' };
+      setExpandedIds((prev) => {
+        if (prev.has(id)) {
+          // COLLASSO (identico nelle due modalità): rimuovi id + discendenti
+          const next = new Set(prev);
+          next.delete(id);
+          for (const d of collectDescendants(index, id)) next.delete(d);
+          return next;
+        }
+        // ESPANSIONE
+        const chain = chainTo(index, id);
+        if (autoCollapseSiblings) return new Set(chain);        // accordion: sostituisce
+        return new Set([...prev, ...chain]);                    // multi-expand: unione
       });
     },
-    [index],
+    [index, autoCollapseSiblings, expandedIds],
   );
 
   const onOpen = useCallback((id: string) => setSelectedId(id), []);
@@ -125,24 +147,16 @@ function Viewer({ map }: ConceptMapViewerProps) {
   }, [visible, index]);
 
   // fitView: sul sottoalbero appena espanso, o su tutto dopo un collasso.
-  const prevChain = useRef<string[]>([]);
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const duration = reduced ? 0 : 500;
-    // Un'espansione si riconosce perché l'ultimo nodo della nuova catena
-    // non era presente nella catena precedente. Questo gestisce correttamente
-    // anche il caso in cui si cambia ramo (es. ['a','b'] → ['c']): la lunghezza
-    // diminuisce, ma si tratta comunque di un'espansione sul nuovo nodo 'c'.
-    const lastNew = expandedChain[expandedChain.length - 1];
-    const expanded = expandedChain.length > 0 && !prevChain.current.includes(lastNew);
-    prevChain.current = expandedChain;
+    const action = lastAction.current;
 
     const id = window.setTimeout(() => {
-      if (expanded) {
-        const focusId = expandedChain[expandedChain.length - 1];
-        const focusNode = index.byId.get(focusId);
+      if (action?.type === 'expand') {
+        const focusNode = index.byId.get(action.id);
         if (focusNode) {
-          const ids = [{ id: focusId }, ...focusNode.childrenIds.map((c) => ({ id: c }))];
+          const ids = [{ id: action.id }, ...focusNode.childrenIds.map((c) => ({ id: c }))];
           void fitView({ nodes: ids, duration, padding: 0.3 });
           return;
         }
@@ -150,7 +164,7 @@ function Viewer({ map }: ConceptMapViewerProps) {
       void fitView({ duration, padding: 0.15 });
     }, 60);
     return () => window.clearTimeout(id);
-  }, [expandedChain, index, fitView]);
+  }, [expandedIds, index, fitView]);
 
   const selectedNode: ConceptNodeData | null = selectedId
     ? (index.byId.get(selectedId) ?? null)
