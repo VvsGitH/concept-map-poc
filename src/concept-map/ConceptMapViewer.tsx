@@ -194,10 +194,6 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
               {t.label}
             </span>
           ))}
-          <span className="cm-legend__item">
-            <span className="cm-legend__dash" />
-            Collegamento trasversale
-          </span>
         </Panel>
       </ReactFlow>
       <NodeModal node={selectedNode} onClose={() => setSelectedId(null)} />
