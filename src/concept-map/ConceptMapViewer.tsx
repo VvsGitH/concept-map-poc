@@ -125,12 +125,17 @@ function Viewer({ map }: ConceptMapViewerProps) {
   }, [visible, index]);
 
   // fitView: sul sottoalbero appena espanso, o su tutto dopo un collasso.
-  const prevChainLen = useRef(0);
+  const prevChain = useRef<string[]>([]);
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const duration = reduced ? 0 : 500;
-    const expanded = expandedChain.length > prevChainLen.current;
-    prevChainLen.current = expandedChain.length;
+    // Un'espansione si riconosce perché l'ultimo nodo della nuova catena
+    // non era presente nella catena precedente. Questo gestisce correttamente
+    // anche il caso in cui si cambia ramo (es. ['a','b'] → ['c']): la lunghezza
+    // diminuisce, ma si tratta comunque di un'espansione sul nuovo nodo 'c'.
+    const lastNew = expandedChain[expandedChain.length - 1];
+    const expanded = expandedChain.length > 0 && !prevChain.current.includes(lastNew);
+    prevChain.current = expandedChain;
 
     const id = window.setTimeout(() => {
       if (expanded) {
