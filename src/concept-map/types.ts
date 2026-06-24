@@ -8,6 +8,8 @@
  */
 
 export type ConceptNodeType = 'person' | 'event' | 'organization' | 'location' | 'topic';
+export type MediaFormat = 'web' | 'paper' | 'de';
+export type MediaType = 'text' | 'image' | 'video' | 'podcast' | 'cards';
 
 export interface SourceLink {
   title: string;
