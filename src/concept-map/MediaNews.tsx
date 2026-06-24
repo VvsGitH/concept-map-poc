@@ -71,14 +71,13 @@ export function MediaNews({
 
       <a
         href={url}
-        className="cm-media-news__title"
+        className="cm-media-news__content"
         target="_blank"
         rel="noopener noreferrer"
       >
-        {title}
+        <p className="cm-media-news__title">{title}</p>
+        {bylineName && <p className="cm-media-news__abstract">{bylineName}</p>}
       </a>
-
-      {bylineName && <p className="cm-media-news__abstract">{bylineName}</p>}
 
       {formattedDate && publicationDate && (
         <time className="cm-media-news__date" dateTime={publicationDate}>

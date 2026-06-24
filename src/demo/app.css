@@ -95,7 +95,7 @@ body {
 }
 
 @media (max-width: 600px) {
-  .demo__header { padding: 10px 12px; }
+  .demo__header { padding: 10px 12px; flex-direction: column; }
   .demo__masthead { font-size: 19px; }
   .demo__tagline { display: none; }
 }

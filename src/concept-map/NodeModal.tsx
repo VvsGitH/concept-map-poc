@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import Markdown from 'react-markdown';
 import type { ConceptNodeData } from './types';
 import { TYPE_STYLES } from './palette';
+import { MediaNews } from './MediaNews';
 
 interface NodeModalProps {
   node: ConceptNodeData | null;
@@ -31,11 +32,14 @@ export function NodeModal({ node, onClose }: NodeModalProps) {
       className="cm-modal"
       aria-labelledby="cm-modal-title"
       onClose={onClose}
-      onClick={(e) => {
+      onClick={e => {
         // click sul backdrop = click sull'elemento dialog stesso
         if (e.target === ref.current) onClose();
       }}
-      style={{ ['--cm-type-color' as string]: style.color, ['--cm-type-tint' as string]: style.tint }}
+      style={{
+        ['--cm-type-color' as string]: style.color,
+        ['--cm-type-tint' as string]: style.tint
+      }}
     >
       <div className="cm-modal__body">
         <header className="cm-modal__header">
@@ -44,18 +48,25 @@ export function NodeModal({ node, onClose }: NodeModalProps) {
               <img
                 src={node.imageUrl}
                 alt=""
-                onError={(e) => {
+                onError={e => {
                   (e.currentTarget.parentElement as HTMLElement).dataset.failed = 'true';
                 }}
               />
             ) : null}
-            <span className="cm-modal__initial">{node.title.charAt(0).toUpperCase()}</span>
+            <span className="cm-modal__initial">
+              {node.title.charAt(0).toUpperCase()}
+            </span>
           </span>
           <div className="cm-modal__heading">
             <span className="cm-modal__badge">{style.label}</span>
             <h2 id="cm-modal-title">{node.title}</h2>
           </div>
-          <button type="button" className="cm-modal__close" onClick={onClose} aria-label="Chiudi la scheda">
+          <button
+            type="button"
+            className="cm-modal__close"
+            onClick={onClose}
+            aria-label="Chiudi la scheda"
+          >
             <span aria-hidden="true">✕</span>
           </button>
         </header>
@@ -65,21 +76,25 @@ export function NodeModal({ node, onClose }: NodeModalProps) {
             <Markdown>{node.description}</Markdown>
           </div>
         ) : (
-          <p className="cm-modal__empty">Nessuna descrizione disponibile per questo elemento.</p>
+          <p className="cm-modal__empty">
+            Nessuna descrizione disponibile per questo elemento.
+          </p>
         )}
 
         {node.sources && node.sources.length > 0 && (
           <section className="cm-modal__sources" aria-label="Fonti">
-            <h3>Fonti</h3>
+            <h3>{`Articoli nell'Archivio (${node.sources.length})`}</h3>
             <ul>
-              {node.sources.map((s) => (
+              {node.sources.map(s => (
                 <li key={s.url}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer">
-                    {s.title}
-                    <span className="cm-modal__ext" aria-hidden="true">
-                      ↗
-                    </span>
-                  </a>
+                  <MediaNews
+                    title={s.title}
+                    url={s.url}
+                    format={s.url.endsWith("pdf") ? "paper" : "web"}
+                    mediaType="text"
+                    bylineName="Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae mollitia adipisci quas nostrum doloremque veritatis recusandae pariatur minus voluptatibus vero quaerat debitis qui repellendus perspiciatis ratione, libero modi nemo aut?"
+                    publicationDate="2026-06-24"
+                  />
                 </li>
               ))}
             </ul>

@@ -34,7 +34,7 @@ export interface ConceptMapViewerProps {
 const nodeTypes = { concept: ConceptNode };
 const edgeTypes = { 'label-edge': LabelEdge };
 
-const CROSS_COLOR = '#A8332E';
+// const CROSS_COLOR = '#A8332E';
 
 function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
   const { fitView } = useReactFlow();
@@ -125,17 +125,17 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
         style: { color: '#6B6657', stroke: '#C9C4B8', strokeWidth: 1.5 },
       });
     }
-    for (const e of visible.visibleCrossLinks) {
-      edges.push({
-        id: `x-${e.id}`,
-        source: e.source,
-        target: e.target,
-        type: 'label-edge',
-        label: e.label,
-        focusable: false,
-        style: { color: CROSS_COLOR, stroke: CROSS_COLOR, strokeWidth: 1.5, strokeDasharray: '6 5', opacity: 0.8 },
-      });
-    }
+    // for (const e of visible.visibleCrossLinks) {
+    //   edges.push({
+    //     id: `x-${e.id}`,
+    //     source: e.source,
+    //     target: e.target,
+    //     type: 'label-edge',
+    //     label: e.label,
+    //     focusable: false,
+    //     style: { color: CROSS_COLOR, stroke: CROSS_COLOR, strokeWidth: 1.5, strokeDasharray: '6 5', opacity: 0.8 },
+    //   });
+    // }
     return edges;
   }, [visible, index]);
 
@@ -185,7 +185,7 @@ function Viewer({ map, autoCollapseSiblings = true }: ConceptMapViewerProps) {
         proOptions={{ hideAttribution: false }}
         onNodeClick={handleNodeClick}
       >
-        <Background variant={BackgroundVariant.Dots} gap={26} size={1.4} color="#DDD8CC" />
+        <Background variant={BackgroundVariant.Dots} bgColor='#FAF5FF' color="#EFF6FF" />
         <Controls showInteractive={false} position="bottom-right" />
         <Panel position="bottom-left" className="cm-legend" aria-hidden="true">
           {Object.values(TYPE_STYLES).map((t) => (
